@@ -8,7 +8,7 @@
     "test:integration": "ENV=testing jest --watchAll --testPathPattern=src/tests/integration/",
     "lintAutoFix": "./node_modules/.bin/eslint src --fix; ",
     "lint": "eslint \"src/**/*.{js,ts}\" --quiet --fix",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "babel": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist ",
     "babelWithSourceMap": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --source-maps inline ",
     "compileForProd": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --presets minify ",

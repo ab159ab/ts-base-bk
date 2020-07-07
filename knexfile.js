@@ -1,7 +1,7 @@
 import configs from "./configs/config";
 
 const appEnv = process.env.ENV.trim();
-const appEnvConfig = configs.getEnvObj(appEnv);
+const appEnvConfig = configs.getEnvObj();
 const dbConfig = appEnvConfig.db;
 
 module.exports = {
