@@ -13,7 +13,7 @@
     "babelWithSourceMap": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --source-maps inline ",
     "compileForProd": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --presets minify ",
     "package": "npm run lint; npm run babel",
-    "start": "npm run lint; npm run build; ENV=development node dist/app.js",
+    "start": "npm run lint; npm run build; ENV=development node dist/src/app.js",
     "startWithoutLint": "npm run babelWithSourceMap  && node -r source-map-support dist/app.js",
     "babelWithSourceMapForWindows": "node ./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --source-maps inline ",
     "startForWindows": "npm run lint & npm run babelWithSourceMapForWindows  && set ENV=development && node -r source-map-support dist/app.js",
