@@ -1,8 +1,5 @@
 import knex from "knex";
-import knexFile from "../../../../knexfile";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const knexConfig = knexFile[process.env.ENV.trim()];
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const knexConfig = require("../../../knexfile");
 
 export default knex(knexConfig);
