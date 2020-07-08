@@ -1,7 +1,7 @@
 import utils from "util";
 import redis, { RedisClient } from "redis";
 
-let redisClient;
+let redisClient: RedisClient;
 
 export const initRedisClient = (): RedisClient => {
   redisClient = redis.createClient();

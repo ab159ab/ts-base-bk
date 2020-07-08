@@ -5,60 +5,53 @@ import {
   insertLeadDao, insertLeadStatusDao,
   insertPassDao, insertUserNameDao, updateUserNameDao,
 } from "../../../../user/basic/dao/userDao";
-import DbTBLS from "../../../../shared/DBTBL/TBL";
 import { AUTH_USER_EXIST } from "../../constants/authConstants";
-import { sendEmail } from "../../../../../base/service/email/email";
 import { bcryptHash } from "../bcrypt";
-import { appEnv, appEnvConfig } from "../../../../../base/loaders/baseLoader";
-import { ENV_TESTING } from "../../../../../base/constants/globalConstants";
 import { getPasswordByLeadIdDao } from "../../dao/passwordDao";
+import PersonModel from "../../models/PersonModel";
+import EmailModel from "../../models/EmailModel";
+import PasswordModel from "../../models/PasswordModel";
+import LeadStatusModel from "../../models/LeadStatusModel";
+import LeadModel from "../../models/LeadModel";
 
-const AUTH_ROUTE_VERIFY_ACCOUNT = "/verify-account";
-const { ENUM: { STATUS: STATUS_ENUM } } = DbTBLS.LEAD_STATUS;
-const { COLS: { FIRST_NAME, LAST_NAME } } = DbTBLS.PERSON;
-const { COLS: { EMAIL } } = DbTBLS.EMAIL;
-const { ENUM: { TYPE: { PERSON } } } = DbTBLS.LEAD;
-const { LEAD_ID } = DbTBLS.FOREIGN_KEYS;
-
-interface IUser {
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-}
+interface IUser { firstName: string, lastName: string, email: string, password: string, }
 
 // eslint-disable-next-line import/prefer-default-export
 export const registerUser = async (
   trx: Transaction, userObj: IUser,
 ): Promise<string> => {
-  let leadId = ""; // TODO: converted from null to string, check here if any error
-
-  const existingEmailRow = await getUserByEmailDao(trx, userObj[EMAIL]);
-  if (existingEmailRow && await getPasswordByLeadIdDao(trx, existingEmailRow[LEAD_ID])) {
+  const existingEmailRow: EmailModel = await getUserByEmailDao(trx, userObj.email);
+  if (existingEmailRow && await getPasswordByLeadIdDao(trx, existingEmailRow.leadId)) {
     return AUTH_USER_EXIST;
   }
 
+  const leadId: string = existingEmailRow
+    ? existingEmailRow.leadId
+    : (await insertLeadDao<LeadModel>(trx, new LeadModel("person"))).id || "";
+
+  const personModel = new PersonModel(leadId, userObj.firstName, userObj.lastName);
+  const passwordModel = new PasswordModel(await bcryptHash(userObj.password), leadId);
+  const leadStatusModel = new LeadStatusModel(leadId, "pending");
+  const emailModel = new EmailModel(userObj.email, leadId);
+
   if (!existingEmailRow) {
-    const lead = await insertLeadDao(trx, PERSON);
-    leadId = lead.id;
     await Promise.all([
-      insertEmailDao(trx, leadId, userObj[EMAIL]),
-      insertUserNameDao(trx, leadId, userObj[FIRST_NAME], userObj[LAST_NAME]),
+      insertEmailDao(trx, emailModel),
+      insertUserNameDao(trx, personModel),
     ]);
   } else {
-    leadId = existingEmailRow[LEAD_ID];
-    await updateUserNameDao(trx, leadId, userObj[FIRST_NAME], userObj[LAST_NAME]);
+    await updateUserNameDao(trx, personModel);
   }
 
   await Promise.all([
-    insertPassDao(trx, leadId, await bcryptHash(userObj.password)),
-    insertLeadStatusDao(trx, leadId, STATUS_ENUM.PENDING),
+    insertPassDao(trx, passwordModel),
+    insertLeadStatusDao(trx, leadStatusModel),
   ]);
-
-  if (appEnv !== ENV_TESTING) {
-    const emailBody = `${appEnvConfig.fullUrl}${AUTH_ROUTE_VERIFY_ACCOUNT}/${leadId}`;
-    sendEmail(userObj[DbTBLS.EMAIL.COLS.EMAIL], emailBody, () => null, "html");
-  }
 
   return leadId;
 };
+
+// if (appEnv !== ENV_TESTING) {
+//   // const emailBody = `${appEnvConfig.fullUrl}${AUTH_ROUTE_VERIFY_ACCOUNT}/${leadId}`;
+//   // sendEmail(emailModel.email, emailBody, () => null, "html");
+// }

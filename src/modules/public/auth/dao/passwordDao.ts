@@ -1,4 +1,4 @@
-import { Transaction } from "knex";
+import { QueryBuilder, Transaction } from "knex";
 import DB_TBLS from "../../../shared/DBTBL/TBL";
 import { getEntityByColNameDao, getEntityByIdDao } from "../../../../base/dao/entityGetDao";
 import delEntityByIdDao from "../../../../base/dao/entityDeleteDao";
@@ -11,22 +11,29 @@ const {
 } = DB_TBLS.FORGOT_PASSWORD;
 const { TABLE: PASSWORD_TABLE, COLS: { HASHED_PASSWORD: HASH_PWD_COL } } = DB_TBLS.PASSWORD;
 
-export const getDetailsByForgetPassTokenDao = (trx: Transaction, token: string) => getEntityByIdDao(
+export const getDetailsByForgetPassTokenDao = (
+  trx: Transaction, token: string,
+):QueryBuilder => getEntityByIdDao(
   trx, token, FORGOT_PWD_TBL,
 );
 
-export const changePasswordDao = (trx, leadId, newPass) => trx(PASSWORD_TABLE)
+export const changePasswordDao = (
+  trx: Transaction, leadId: string, newPass: string,
+):QueryBuilder => trx(PASSWORD_TABLE)
   .update(HASH_PWD_COL, newPass)
   .where(LEAD_ID, leadId)
   .returning("*");
 
-export const deleteForgotPassToken = (trx, token) => delEntityByIdDao(trx, FORGOT_PWD_TBL, token);
+export const deleteForgotPassToken = (
+  trx: Transaction, token: string,
+):QueryBuilder => delEntityByIdDao(trx, FORGOT_PWD_TBL, token);
 
-export const getPasswordByLeadIdDao = (trx, leadId) => getEntityByColNameDao(trx,
-  PASSWORD_TABLE, LEAD_ID, leadId);
+export const getPasswordByLeadIdDao = (
+  trx: Transaction, leadId: string,
+):QueryBuilder => getEntityByColNameDao(trx, PASSWORD_TABLE, LEAD_ID, leadId);
 
-export const insertPasswordResetTokenDao = (trx, leadId,
-  tokenExpirationDate) => insertEntityDao(trx, FORGOT_PWD_TBL,
+export const insertPasswordResetTokenDao = (trx: Transaction, leadId: string,
+  tokenExpirationDate: string) => insertEntityDao(trx, FORGOT_PWD_TBL,
   {
     [LEAD_ID]: leadId, [TOKEN_EXP_COL]: tokenExpirationDate,
   }).then((row) => row[0][FORGOT_PWD_ID_COL]);

@@ -1,15 +1,16 @@
 import { INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY } from "http-status-codes";
 import { Request, Response } from "express";
 import { Transaction } from "knex";
-import knex from "../../../../base/database/knex/knex";
 import { AUTH_USER_EXIST } from "../constants/authConstants";
 import { registerUser } from "../service/auth/register";
-import { appConfig, appEnv, appEnvConfig } from "../../../../base/loaders/baseLoader";
+import { appEnv, appEnvConfig } from "../../../../base/loaders/baseLoader";
 import { ENV_TESTING } from "../../../../base/constants/globalConstants";
 import { setUserSession } from "../service/redis/session";
+import { otherConfigs } from "../../../../../configs/config";
+import knex from "../../../../base/database/knex/knex";
 
 const COOKIE_DOMAIN_SCOPE = `.${appEnvConfig.fe.domain}`;
-const SESSION_KEY_NAME = appConfig.session.sessionKeyName();
+const SESSION_KEY_NAME = otherConfigs.session.sessionKeyName();
 
 export const getDefaultCookieConfig = (expirationDate: Date):{
   domain: string, path: string, expires: Date
@@ -29,16 +30,16 @@ export const registerController = async (req: Request, res: Response): Promise<v
         res.status(UNPROCESSABLE_ENTITY).json({ message: "The user already exist" });
       } else {
         if (appEnv !== ENV_TESTING) {
-          setUserSession(leadIdOrResult, appConfig.auth.loginExpireTimeInMinutes() * 60000,
+          setUserSession(leadIdOrResult, otherConfigs.auth.loginExpireTimeInMinutes() * 60000,
             { leadId: leadIdOrResult });
 
           const cookieExpireDate = new Date(
-            Date.now() + (appConfig.auth.loginExpireTimeInMinutes() * 60000),
+            Date.now() + (otherConfigs.auth.loginExpireTimeInMinutes() * 60000),
           );
 
           res.cookie(SESSION_KEY_NAME, leadIdOrResult, getDefaultCookieConfig(cookieExpireDate));
         }
-        res.json({ message: "There is a server error" });
+        res.json({ message: "Your account has been created successfully" });
       }
     });
   } catch (e) {

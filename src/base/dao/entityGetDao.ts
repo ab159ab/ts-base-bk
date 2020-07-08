@@ -14,10 +14,9 @@ export const getEntitiesByFKDao = (
 ):QueryBuilder => trx(tableName)
   .where(fkColName, value);
 
-export const getEntityByFKDao = (
+export const getEntityByFKDao = <T> (
   trx: Transaction, tableName: string, fkColName: string, value: string,
-):QueryBuilder => trx(tableName)
-  .where(fkColName, value).first();
+):QueryBuilder<T> => trx(tableName).where(fkColName, value).first();
 
 export const getEntityByColNameDao = (
   trx: Transaction, tableName: string, colName: string, colValue: string,

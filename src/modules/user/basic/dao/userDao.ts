@@ -1,74 +1,63 @@
 import { QueryBuilder, Transaction } from "knex";
-import { getEntitiesByFKDao, getEntityByFKDao, getEntityByIdDao } from "../../../../base/dao/entityGetDao";
+import { getEntityByFKDao } from "../../../../base/dao/entityGetDao";
 import DB_TBLS from "../../../shared/DBTBL/TBL";
 import { insertEntityDao } from "../../../../base/dao/entityInsertDao";
 import { updateEntityByFKDao } from "../../../../base/dao/entityUpdateDao";
+import EmailModel from "../../../public/auth/models/EmailModel";
+import PersonModel from "../../../public/auth/models/PersonModel";
+import PasswordModel from "../../../public/auth/models/PasswordModel";
+import LeadStatusModel from "../../../public/auth/models/LeadStatusModel";
+import LeadModel from "../../../public/auth/models/LeadModel";
 
 const { LEAD_ID } = DB_TBLS.FOREIGN_KEYS;
-const { TABLE: LEAD_TABLE, COLS: { TYPE: LEAD_TYPE_COL } } = DB_TBLS.LEAD;
-const { TABLE: LEAD_STATUS_TABLE, COLS: { STATUS: LEAD_STATUS_COL } } = DB_TBLS.LEAD_STATUS;
+const { TABLE: LEAD_TABLE } = DB_TBLS.LEAD;
+const { TABLE: LEAD_STATUS_TABLE } = DB_TBLS.LEAD_STATUS;
 const {
   TABLE: PERSON_TABLE,
-  COLS: { FIRST_NAME: FNAME_COL, LAST_NAME: LNAME_COL },
 } = DB_TBLS.PERSON;
 const { TABLE: EMAIL_TABLE, COLS: { EMAIL: EMAIL_COL } } = DB_TBLS.EMAIL;
-const { TABLE: PASSWORD_TABLE, COLS: { HASHED_PASSWORD: HASH_PWD_COL } } = DB_TBLS.PASSWORD;
+const { TABLE: PASSWORD_TABLE } = DB_TBLS.PASSWORD;
 
 export const getUserByEmailDao = (
   trx: Transaction, email: string,
-):QueryBuilder => getEntityByFKDao(trx, EMAIL_TABLE, EMAIL_COL, email);
-
-export const getUserById = (
-  trx: Transaction, userId: string,
-):QueryBuilder => getEntityByIdDao(trx, userId, PERSON_TABLE);
+):QueryBuilder<EmailModel> => getEntityByFKDao<EmailModel>(
+  trx, EMAIL_TABLE, EMAIL_COL, email,
+);
 
 export const getEmailByLeadIdDao = (
   trx: Transaction, leadId: string,
 ):QueryBuilder => getEntityByFKDao(trx, EMAIL_TABLE, LEAD_ID, leadId);
-
-export const getEmailListByUserLeadId = (
-  trx:Transaction, leadId:string,
-):QueryBuilder => getEntitiesByFKDao(trx,
-  EMAIL_TABLE, LEAD_ID, leadId);
 
 export const getUserStatusByLeadId = (
   trx: Transaction, leadId: string,
 ):QueryBuilder => getEntityByFKDao(trx, LEAD_STATUS_TABLE, LEAD_ID, leadId)
   .first();
 
-export const insertLeadDao = (
-  trx:Transaction, type:string,
-):QueryBuilder => insertEntityDao(trx, LEAD_TABLE,
-  { [LEAD_TYPE_COL]: type }).then((insertedRow) => insertedRow[0]);
+export const insertLeadDao = <T> (
+  trx:Transaction, leadModel:LeadModel,
+):Promise<T> => insertEntityDao(trx, LEAD_TABLE, leadModel)
+    .then((insertedRow) => insertedRow[0]);
 
 export const insertEmailDao = (
-  trx:Transaction, leadId:string, email:string,
-):QueryBuilder => insertEntityDao(trx, EMAIL_TABLE,
-  { [LEAD_ID]: leadId, [EMAIL_COL]: email })
+  trx:Transaction, emailModel: EmailModel,
+):Promise<EmailModel> => insertEntityDao<EmailModel>(trx, EMAIL_TABLE, emailModel)
   .then((insertedRow) => insertedRow[0]);
 
 export const insertPassDao = (
-  trx:Transaction, leadId:string, hashedPass:string,
-):QueryBuilder => insertEntityDao(trx,
-  PASSWORD_TABLE, { [LEAD_ID]: leadId, [HASH_PWD_COL]: hashedPass })
+  trx:Transaction, passwordModel: PasswordModel,
+):Promise<PasswordModel> => insertEntityDao<PasswordModel>(trx, PASSWORD_TABLE, passwordModel)
   .then((insertedRow) => insertedRow[0]);
 
 export const insertUserNameDao = (
-  trx:Transaction, leadId:string, fname:string, lname:string,
-):QueryBuilder => insertEntityDao(trx,
-  PERSON_TABLE, { [LEAD_ID]: leadId, [FNAME_COL]: fname, [LNAME_COL]: lname });
+  trx:Transaction, personModel: PersonModel,
+):QueryBuilder => insertEntityDao<PersonModel>(trx, PERSON_TABLE, personModel);
 
 export const insertLeadStatusDao = (
-  trx: Transaction, leadId:string, status:string,
-) => insertEntityDao(trx,
-  LEAD_STATUS_TABLE, { [LEAD_ID]: leadId, [LEAD_STATUS_COL]: status });
-
-export const changeRegistrationStatusDao = (
-  trx:Transaction, leadId:string, status:string,
-):QueryBuilder => updateEntityByFKDao(trx,
-  LEAD_STATUS_TABLE, LEAD_ID, leadId, { [LEAD_STATUS_COL]: status });
+  trx: Transaction, leadStatusModel: LeadStatusModel,
+) => insertEntityDao(trx, LEAD_STATUS_TABLE, leadStatusModel);
 
 export const updateUserNameDao = (
-  trx:Transaction, leadId:string, fname:string, lname:string,
-):QueryBuilder => updateEntityByFKDao(trx,
-  PERSON_TABLE, LEAD_ID, leadId, { [FNAME_COL]: fname, [LNAME_COL]: lname });
+  trx:Transaction, personModel: PersonModel,
+):QueryBuilder<PersonModel> => updateEntityByFKDao(
+  trx, PERSON_TABLE, LEAD_ID, personModel.leadId, personModel,
+);

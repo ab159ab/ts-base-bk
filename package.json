@@ -22,7 +22,8 @@
     "dbRollback": "ENV=development knex migrate:rollback",
     "dbSeed": "ENV=development knex seed:run",
     "dbReset": "npm run dbRollback; npm run dbMigrateLatest",
-    "dbResetRun": "npm run dbReset; npm run dbSeed; npm start"
+    "dbResetRun": "npm run dbReset; npm run dbSeed; npm start",
+    "tsc-win": "rmdir dist /s /q && tsc && cd dist && set ENV=development && node src/app.js"
   },
   "jest": {
     "globalSetup": "<rootDir>/src/tests/global-test-setup.js"
@@ -43,9 +44,12 @@
     "pg": "^8.2.1",
     "postgres": "^1.0.2",
     "redis": "^3.0.2",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.6",
     "@types/jest": "^25.2.1",
     "@types/node": "^14.0.14",

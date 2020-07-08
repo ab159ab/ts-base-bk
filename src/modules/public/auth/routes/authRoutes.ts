@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { initRedisClient } from "../service/redis/redis";
 import { registerController } from "../controller/registerController";
+import authValidationMiddlewares from "../middleware/authValidationMiddleware";
 
 initRedisClient();
 
 const router: Router = Router();
 // expressRouter.use(testCookieSetMiddleware);
 
-router.post("/register", registerController);
+router.post("/register", ...authValidationMiddlewares.register, registerController);
 // expressRouter.post("/login", authMiddlewares.login, loginController);
 // expressRouter.post("/change-password", authMiddlewares.changePassword,
 //   changeUserPasswordController);

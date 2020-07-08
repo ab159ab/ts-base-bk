@@ -378,4 +378,4 @@ const DB_TBLS = {
   },
 };
 
-module.exports = DB_TBLS;
+export default DB_TBLS;
