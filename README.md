@@ -10,6 +10,7 @@ grant all privileges on database skeleton to skeleton;
 \c skeleton;
 CREATE EXTENSION "uuid-ossp";
 ```
+install redis `sudo apt install redis`
 
 install knex as global and local dependency 
 
