@@ -24,7 +24,7 @@ to drop migrations (no need in setup) run => `knex migrate:rollback`
 `npm startForWindows` for windows
 
 ## Technology stack
-All (most all) the code is coded by hand (ie no code generatores are used). All the code and choices were well thought and well known before implementation.
+All most all the code is coded by hand (ie no code generatores are used). All the code and choices were well thought and well known before implementation.
 Each choice has its effect on fate of the project flow should be well known before using.
 
 1. Node 12.18.2 LTS (never use non-LTS version). Use nvm (node version manager (preferred) to install node).
@@ -44,7 +44,11 @@ Each choice has its effect on fate of the project flow should be well known befo
 ## Notes for developers
 ### General concepts
 1. Do not try, convert, drag or expect javascript (including Typescript) to have and show language features like Java/C# or other languages. Javascript has its own echosystem, taste, features, pros and cons. It it is best to keep it that way.
-
+1. Keep layers of controller, service, dao (database access object), models, utilities separate.
+1. Of course, keep frontend and backend separate.
+    1. Further, in frontend, the scss/css should go in separate files, component/html in separate file.
+    1. CDN is good but in this case, do not use any CDN or `<scrip>` tags requesting any third party css/js/image. Use npm to install locally and then refer it in code by `import`.
+    
 ### Banned things
 1. Use of `any` or `unknown` keyword without explicit written permission from code owner
 1. Use of `<>` generics. This is temporary restriction and will be uplifted later on.
@@ -63,3 +67,6 @@ Why these strict rules?
 1. Register
 1. Login
 1. Logout
+
+## Code owner
+Masood Ahmad.
