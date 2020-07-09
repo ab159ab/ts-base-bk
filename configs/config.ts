@@ -1,7 +1,7 @@
 const development = {
   host: () => "127.0.0.1",
   port: () => "4321",
-  fullUrl: () => "http://api.bk.com",
+  fullUrl: () => "http://127.0.0.1:4321",
   allowedOrigins: () => ["http://127.0.0.1:5321"],
   db: {
     client: () => "pg",

@@ -51,7 +51,12 @@ export const insertUserNameDao = (
 
 export const insertLeadStatusDao = (
   trx: Transaction, leadStatusModel: LeadStatusModel,
-) => insertEntityDao(trx, LEAD_STATUS_TABLE, leadStatusModel);
+):QueryBuilder<LeadStatusModel> => insertEntityDao(trx, LEAD_STATUS_TABLE, leadStatusModel);
+
+export const changeRegistrationStatusDao = (
+  trx: Transaction, leadStatusModel: LeadStatusModel,
+) => updateEntityByFKDao<LeadStatusModel>(trx,
+  LEAD_STATUS_TABLE, LEAD_ID, leadStatusModel.leadId, leadStatusModel);
 
 export const updateUserNameDao = (
   trx:Transaction, personModel: PersonModel,

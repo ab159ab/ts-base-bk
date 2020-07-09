@@ -1,9 +1,12 @@
 import { Transaction } from "knex";
+import { appEnv, appEnvConfig } from "../../../../../base/loaders/baseLoader";
+import { ENV_TESTING } from "../../../../../base/constants/globalConstants";
+import { sendEmail } from "../../../../../base/service/email/email";
 import {
-  getUserByEmailDao,
+  getUserByEmailDao, getUserStatusByLeadId,
   insertEmailDao,
   insertLeadDao, insertLeadStatusDao,
-  insertPassDao, insertUserNameDao, updateUserNameDao,
+  insertPassDao, insertUserNameDao, updateUserNameDao, changeRegistrationStatusDao,
 } from "../../../../user/basic/dao/userDao";
 import { AUTH_USER_EXIST } from "../../constants/authConstants";
 import { bcryptHash } from "../bcrypt";
@@ -16,7 +19,6 @@ import LeadModel from "../../models/LeadModel";
 
 interface IUser { firstName: string, lastName: string, email: string, password: string, }
 
-// eslint-disable-next-line import/prefer-default-export
 export const registerUser = async (
   trx: Transaction, userObj: IUser,
 ): Promise<string> => {
@@ -48,10 +50,24 @@ export const registerUser = async (
     insertLeadStatusDao(trx, leadStatusModel),
   ]);
 
+  if (appEnv !== ENV_TESTING) {
+    const emailBody = `<a href='${appEnvConfig.fullUrl()}/verify-account/${leadId}'>Click here to verify your account</a>`;
+    console.log(emailBody, "emailBody");
+    sendEmail(emailModel.email, emailBody, () => null, "html");
+  }
+
   return leadId;
 };
 
-// if (appEnv !== ENV_TESTING) {
-//   // const emailBody = `${appEnvConfig.fullUrl}${AUTH_ROUTE_VERIFY_ACCOUNT}/${leadId}`;
-//   // sendEmail(emailModel.email, emailBody, () => null, "html");
-// }
+export const verifyUserAccount = async (trx: Transaction, accountId: string):
+  Promise<LeadStatusModel | boolean> => {
+  const userStatus: LeadStatusModel = await getUserStatusByLeadId(trx, accountId);
+  if (userStatus) {
+    if (userStatus.status === "pending") {
+      return changeRegistrationStatusDao(
+        trx, new LeadStatusModel(userStatus.leadId, "active"),
+      ); // accountId, STATUS_ENUM.ACTIVE
+    }
+  }
+  return false;
+};

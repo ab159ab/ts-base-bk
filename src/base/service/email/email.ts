@@ -1,3 +1,5 @@
+import mailgun, { IEmailConfig, IMailgunConfig } from "./mailgun";
+
 import {
   EMAIL_BODY_TYPE_HTML,
   EMAIL_SERVICE_MAIL_GUN,
@@ -9,14 +11,6 @@ const emailTransportServiceName: string = otherConfigs.emailService.transport();
 const emailTransportServiceConfig = otherConfigs.emailService.mailgun;
 const emailConfig = emailTransportServiceConfig.email;
 
-interface IEmailConfig {
-  subject: string,
-  from: string,
-  "h:Reply-To": string,
-  to?: string,
-  html?: string,
-}
-
 const defaultEmailConfig: IEmailConfig = {
   subject: emailConfig.subject(),
   from: emailConfig.from(),
@@ -25,15 +19,20 @@ const defaultEmailConfig: IEmailConfig = {
 
 // eslint-disable-next-line import/prefer-default-export
 export const sendEmail = (
-  recipient: string, body: string, emailResponseCallback?: () => void | null,
+  recipient: string, body: string,
+  emailResponseCallback?: (err: string, resp: string) => void | null,
   bodyType = EMAIL_BODY_TYPE_HTML,
 ): void => {
-  const emailBody: IEmailConfig = { ...defaultEmailConfig };
+  const emailServiceConfig: IMailgunConfig = {
+    domain: emailTransportServiceConfig.domain(),
+    apiKey: emailTransportServiceConfig.apiKey(),
+  };
+  const emailConfigs: IEmailConfig = { ...defaultEmailConfig };
   if (emailTransportServiceName === EMAIL_SERVICE_MAIL_GUN) {
-    // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
-    const sendMail = require("./mailgun");
-    emailBody.html = "html"; // TODO: emailBody[bodyType || EMAIL_BODY_TYPE_HTML] = body;
-    emailBody.to = recipient;
-    sendMail(emailTransportServiceConfig, emailBody, emailResponseCallback);
+    emailConfigs.html = body; // TODO: emailBody[bodyType || EMAIL_BODY_TYPE_HTML] = body;
+    emailConfigs.to = recipient;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mailgun(emailServiceConfig, emailConfigs, emailResponseCallback);
   } else if (emailTransportServiceName === EMAIL_SERVICE_SEND_GRID) { /* other transport */ }
 };
