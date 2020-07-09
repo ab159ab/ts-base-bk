@@ -24,6 +24,9 @@ to drop migrations (no need in setup) run => `knex migrate:rollback`
 `npm startForWindows` for windows
 
 ## Technology stack
+All (most all) the code is coded by hand (ie no code generatores are used). All the code and choices were well thought and well known before implementation.
+Each choice has its effect on fate of the project flow should be well known before using.
+
 1. Node 12.18.2 LTS (never use non-LTS version). Use nvm (node version manager (preferred) to install node).
 1. Redis (session storage)
 1. Typescript
@@ -32,7 +35,11 @@ to drop migrations (no need in setup) run => `knex migrate:rollback`
 1. knex query builder
 1. Posgres database
 1. ESlint and airbnb base for automatic code checking
+1. JEST for unit/integration testing
+1. Enzym, pupeteer (later; not included for now) for further end to end and more testing
+1. i18n custom for internationalization and multi language support
 1. Mailgun for sending emails to users.
+1. Automatic CSS browser compatibility for old browsers (to limit versions of course)
 
 ## Notes for developers
 ### General concepts
@@ -50,9 +57,6 @@ to drop migrations (no need in setup) run => `knex migrate:rollback`
 Why these strict rules?
 1. Code is one of the most precious things to a company. 
 1. Any inconsistency or unoptimized state is not tolerable.
-
-## Release notes
-1. All (most all) the code is coded by hand (ie no code generatores are used)
 
 ## Release
 ### 1.0.0
