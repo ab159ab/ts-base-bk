@@ -1,10 +1,9 @@
-import { ValidationChain } from "express-validator";
-import { passwordFieldValidation } from "./fieldsValidation";
+import {
+  passwordFieldValidation,
+} from "./fieldsValidation";
 import { emailFieldValidation, requiredFieldValidation } from "../../../../base/middlewares/fieldsValidationMiddleware";
 
-const validations: ValidationChain[] = [
-  requiredFieldValidation("firstName", "first name"),
-  requiredFieldValidation("lastName", "last name"),
+const validations = [
   requiredFieldValidation("email"),
   emailFieldValidation("email", false),
   requiredFieldValidation("password"),

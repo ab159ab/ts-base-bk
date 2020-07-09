@@ -2,15 +2,16 @@ const development = {
   host: () => "127.0.0.1",
   port: () => "4321",
   fullUrl: () => "http://api.bk.com",
+  allowedOrigins: () => ["http://127.0.0.1:5321"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
-    user: () => "leadgen",
-    password: () => "leadgen",
-    database: () => "leadgen",
+    user: () => "postgres",
+    password: () => "123456",
+    database: () => "skeleton",
   },
   fe: {
-    domain: () => "fe.com",
+    domain: () => "http://127.0.0.1:5321",
     host: () => "http://fe.com",
     port: () => "5321",
     fullUrl: () => "http://fe.com",
@@ -21,6 +22,7 @@ const testing: EnvConfig = {
   host: () => "127.0.0.1",
   port: () => "4321",
   fullUrl: () => "http://api.bk.com",
+  allowedOrigins: () => ["127.0.0.1:5321"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
@@ -38,11 +40,11 @@ const testing: EnvConfig = {
 
 export const otherConfigs = {
   auth: {
-    loginExpireTimeInMinutes: () => 30,
-    resetPasswordExpireTimeInMinutes: () => 100,
+    loginExpireTimeInMinutes: (): number => 30,
+    resetPasswordExpireTimeInMinutes: (): number => 100,
   },
   session: {
-    sessionKeyName: () => "ts-bk-cookie",
+    sessionKeyName: ():string => "ts-bk-cookie",
   },
   emailService: {
     transport: ():string => "mailgun",
