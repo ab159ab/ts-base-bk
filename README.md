@@ -40,6 +40,8 @@ Each choice has its effect on fate of the project flow should be well known befo
 1. i18n custom for internationalization and multi language support
 1. Mailgun for sending emails to users.
 1. Automatic CSS browser compatibility for old browsers (to limit versions of course)
+1. Babel, Typescript compiler for transpiling code for backward compatibility
+1. Webpack for bundling frontend code
 
 ## Notes for developers
 ### General concepts
