@@ -1,4 +1,5 @@
-import { config } from "../../../configs/config";
+import { configs, otherConfigs } from "../../../configs/config";
 
 export const appEnv = (process.env.ENV || "").trim();
-export const appConfig = config.getEnvObj(appEnv) as any;
+export const appConfigs = otherConfigs;
+export const appEnvConfig = configs.getEnvObj(appEnv);

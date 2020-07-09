@@ -5,9 +5,9 @@ const development = {
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
-    user: () => "___",
-    password: () => "___",
-    database: () => "___",
+    user: () => "leadgen",
+    password: () => "leadgen",
+    database: () => "leadgen",
   },
   fe: {
     domain: () => "fe.com",
@@ -36,12 +36,32 @@ const testing: EnvConfig = {
   },
 };
 
-export const config = {
-  getEnvObj: (envString:string): EnvConfig => {
-    if (envString === "development") { return development; }
-    if (envString === "testing") { return testing; }
-    else { throw new Error(`Unexpected envString of ${envString}. Valid values are 'development', 'testing'`); }
+export const otherConfigs = {
+  auth: {
+    loginExpireTimeInMinutes: () => 30,
+    resetPasswordExpireTimeInMinutes: () => 100,
+  },
+  session: {
+    sessionKeyName: () => "ts-bk-cookie",
+  },
+  emailService: {
+    transport: ():string => "mailgun",
+    mailgun: {
+      apiKey: ():string => "6745a1dc44b3bd7b8e24e118d9ceae4b-46ac6b00-c784b5ab",
+      domain: ():string => "sandboxe7a44227e6f64e599fe5a80aa8262fde.mailgun.org",
+      email: {
+        from: ():string => "ts@test.com",
+        subject: ():string => "Hi",
+        replyTo: ():string => "whoever@gmail.com",
+      },
+    },
   },
 };
 
-export const abc = "";
+export const configs = {
+  getEnvObj: (envString:string): EnvConfig => {
+    if (envString === "development") { return development; }
+    if (envString === "testing") { return testing; }
+    throw new Error(`Unexpected envString of ${envString}. Valid values are 'development', 'testing'`);
+  },
+};
