@@ -31,8 +31,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/redis": "^2.8.24",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
     "core-js": "^3.6.4",
     "core-util-is": "^1.0.2",
     "express": "^4.17.1",
@@ -44,9 +47,7 @@
     "pg": "^8.2.1",
     "postgres": "^1.0.2",
     "redis": "^3.0.2",
-    "regenerator-runtime": "^0.13.3",
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4"
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

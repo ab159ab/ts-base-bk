@@ -10,3 +10,5 @@ export const getSessionData = (sessionId:string): string => getAsyncRedisClient(
 
 export const hasSession = (sessionId:string):boolean | string => sessionId
     && getSessionData(sessionId) !== null;
+
+export const deleteUserSession = (sessionId: string):boolean => getRedisClient().del(sessionId);

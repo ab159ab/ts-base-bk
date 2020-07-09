@@ -24,14 +24,11 @@ export const getUserByEmailDao = (
   trx, EMAIL_TABLE, EMAIL_COL, email,
 );
 
-export const getEmailByLeadIdDao = (
-  trx: Transaction, leadId: string,
-):QueryBuilder => getEntityByFKDao(trx, EMAIL_TABLE, LEAD_ID, leadId);
-
 export const getUserStatusByLeadId = (
   trx: Transaction, leadId: string,
-):QueryBuilder => getEntityByFKDao(trx, LEAD_STATUS_TABLE, LEAD_ID, leadId)
-  .first();
+):QueryBuilder<LeadStatusModel> => getEntityByFKDao<LeadStatusModel>(
+  trx, LEAD_STATUS_TABLE, LEAD_ID, leadId,
+).first();
 
 export const insertLeadDao = <T> (
   trx:Transaction, leadModel:LeadModel,
