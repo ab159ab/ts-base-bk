@@ -2,7 +2,7 @@ import { INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY } from "http-status-codes";
 import { Request, Response } from "express";
 import { Transaction } from "knex";
 import { AUTH_USER_EXIST } from "../constants/authConstants";
-import { registerUser } from "../service/auth/register";
+import { registerUser, verifyUserAccount } from "../service/auth/register";
 import { appEnv, appEnvConfig } from "../../../../base/loaders/baseLoader";
 import { ENV_TESTING } from "../../../../base/constants/globalConstants";
 import { setUserSession } from "../service/redis/session";
@@ -20,7 +20,6 @@ export const getDefaultCookieConfig = (expirationDate: Date):{
   expires: expirationDate,
 });
 
-// eslint-disable-next-line import/prefer-default-export
 export const registerController = async (req: Request, res: Response): Promise<void> => {
   try {
     await knex.transaction(async (trx: Transaction) => {
@@ -44,6 +43,20 @@ export const registerController = async (req: Request, res: Response): Promise<v
     });
   } catch (e) {
     console.log(e);
+    res.status(INTERNAL_SERVER_ERROR).json({ message: "There is a server error" });
+  }
+};
+
+export const verifyAccount = async (req: Request, res: Response) => {
+  try {
+    await knex.transaction(async (trx: Transaction) => {
+      if (await verifyUserAccount(trx, req.params.accountId)) {
+        if (appEnv === ENV_TESTING) res.json({ message: "Account verified successfully" });
+        else res.redirect(`${appEnvConfig.fe.fullUrl()}/loin`);
+      } else res.status(UNPROCESSABLE_ENTITY).json({ message: "Error in Accound Verification" });
+    });
+  } catch (e) {
+    console.error(e);
     res.status(INTERNAL_SERVER_ERROR).json({ message: "There is a server error" });
   }
 };

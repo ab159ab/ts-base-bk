@@ -12,10 +12,10 @@ const knexConfigs = {
     charset: "utf8",
   },
   migrations: {
-    directory: "./base/database/knex/migrations",
+    directory: `${__dirname}/base/database/knex/migrations`,
   },
   seeds: {
-    directory: "./base/database/knex/seeds",
+    directory: `${__dirname}/base/database/knex/migrations`,
   },
 };
 
