@@ -1,7 +1,7 @@
 import { Transaction } from "knex";
 import { appEnv, appEnvConfig } from "../../../../../base/loaders/baseLoader";
 import { ENV_TESTING } from "../../../../../base/constants/globalConstants";
-import { sendEmail } from "../../../../../base/service/email/email";
+import sendEmail from "../../../../../base/service/email/email";
 import {
   getUserByEmailDao, getUserStatusByLeadId,
   insertEmailDao,
@@ -52,7 +52,6 @@ export const registerUser = async (
 
   if (appEnv !== ENV_TESTING) {
     const emailBody = `<a href='${appEnvConfig.fullUrl()}/verify-account/${leadId}'>Click here to verify your account</a>`;
-    console.log(emailBody, "emailBody");
     sendEmail(emailModel.email, emailBody, () => null, "html");
   }
 

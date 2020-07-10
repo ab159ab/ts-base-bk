@@ -49,8 +49,8 @@ export const otherConfigs = {
   emailService: {
     transport: ():string => "mailgun",
     mailgun: {
-      apiKey: ():string => "6745a1dc44b3bd7b8e24e118d9ceae4b-46ac6b00-c784b5ab",
-      domain: ():string => "sandboxe7a44227e6f64e599fe5a80aa8262fde.mailgun.org",
+      apiKey: ():string => "f62c3af5787985c4178bb7f9ff58b6ad-87c34c41-bb176fc8",
+      domain: ():string => "sandbox010719cbb42248e4ae2ef17bca056cc9.mailgun.org",
       email: {
         from: ():string => "ts@test.com",
         subject: ():string => "Hi",

@@ -1,33 +1,20 @@
-import mailgunJs from "mailgun-js";
+import mailgunJs, { ConstructorParams, Error } from "mailgun-js";
+import Mailgun = require("mailgun-js");
+import SendResponse = Mailgun.messages.SendResponse;
+import SendData = Mailgun.messages.SendData;
 
-const defaultLog = (err: any, resp: any) => {
+const defaultLog = (err: Error, resp: SendResponse) => {
   if (err) console.error(err);
   else console.log(resp);
 };
 
-export interface IMailgunConfig {
-  domain: string,
-  apiKey: string,
-}
-
-export interface IEmailConfig {
-  subject: string,
-  from: string,
-  "h:Reply-To": string,
-  to?: string,
-  html?: string,
-  text?: string,
-}
-
 const sendMail = (
-  configs: IMailgunConfig,
-  emailDetails: IEmailConfig,
-  emailResponseCb: (err: string, resp: string) => void | null,
-) => {
+  configs: ConstructorParams,
+  emailDetails: SendData,
+  emailResponseCb?: (err: Error, resp: SendResponse) => void | null,
+):void => {
   const mg = mailgunJs({ apiKey: configs.apiKey, domain: configs.domain });
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mg.messages().send(emailDetails, (err: string, resp: string) => {
+  mg.messages().send(emailDetails, (err: Error, resp: SendResponse) => {
     defaultLog(err, resp);
     if (emailResponseCb) emailResponseCb(err, resp);
   });
