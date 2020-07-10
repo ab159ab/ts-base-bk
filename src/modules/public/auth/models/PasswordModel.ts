@@ -4,9 +4,6 @@ class PasswordModel {
     public leadId: string,
     public id?: string | undefined,
   ) {
-    this.id = id;
-    this.leadId = leadId;
-    this.hashedPassword = hashedPassword;
   }
 }
 
