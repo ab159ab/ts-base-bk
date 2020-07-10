@@ -13,4 +13,6 @@ router.post("/login", ...authValidationMiddlewares.login, loginController);
 router.get("/logout", logoutController); // , ...authValidationMiddlewares.logout
 router.get("/verify-account/:accountId", verifyAccount);
 
+router.get("/testing", (req, res) => res.end("Hello to Testing World!"));
+
 export default router;

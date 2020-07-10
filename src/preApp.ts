@@ -19,7 +19,7 @@ expressApp.set("json spaces", 2);
 
 expressApp.use((req: Request, res: Response, next: NextFunction) => {
   const origin = req.headers.origin || "";
-  if (appEnvConfig.allowedOrigins().includes(origin)) {
+  if (!origin || appEnvConfig.allowedOrigins().includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
     res.header("Access-Control-Allow-Headers",
@@ -30,16 +30,16 @@ expressApp.use((req: Request, res: Response, next: NextFunction) => {
   return res.status(400).json("{Either login, or use API key}").end();
 });
 
+expressApp.use("/", routes);
+
 expressApp.on("ready", () => {
   console.log("app is ready");
 });
 
-expressApp.use((req, res, next) => {
+expressApp.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`======= ${req.method} request for ${req.url} =======`);
   next();
 });
-
-expressApp.use("/", routes);
 
 knex.raw("select 1+1 as result")
   .then(() => {

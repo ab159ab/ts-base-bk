@@ -1,8 +1,8 @@
 const development = {
   host: () => "127.0.0.1",
   port: () => "4321",
-  fullUrl: () => "http://127.0.0.1:4321",
-  allowedOrigins: () => ["http://127.0.0.1:5321"],
+  fullUrl: () => "http://api.skeleton.com",
+  allowedOrigins: () => ["http://skeleton.com", "http://testapi.skeleton.com"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
@@ -20,18 +20,18 @@ const development = {
 type EnvConfig = typeof development;
 const testing: EnvConfig = {
   host: () => "127.0.0.1",
-  port: () => "4321",
-  fullUrl: () => "http://api.bk.com",
-  allowedOrigins: () => ["127.0.0.1:5321"],
+  port: () => "4322",
+  fullUrl: () => "http://testapi.skeleton.com",
+  allowedOrigins: () => ["http://skeleton.com", "http://testapi.skeleton.com"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
-    user: () => "___",
-    password: () => "___",
-    database: () => "___",
+    user: () => "postgres",
+    password: () => "123456",
+    database: () => "skeleton-test",
   },
   fe: {
-    domain: () => "fe.com",
+    domain: () => "http://127.0.0.1:5321",
     host: () => "http://fe.com",
     port: () => "5321",
     fullUrl: () => "http://fe.com",
@@ -55,6 +55,17 @@ export const otherConfigs = {
         from: ():string => "ts@test.com",
         subject: ():string => "Hi",
         replyTo: ():string => "whoever@gmail.com",
+      },
+    },
+  },
+  jest: {
+    timeoutInMs: ():number => 3000000,
+    test: {
+      auth: {
+        testFirstName: ():string => "test first name",
+        testLastName: ():string => "test last name",
+        testEmail: ():string => "test@test.com",
+        testPassword: ():string => "123456",
       },
     },
   },
