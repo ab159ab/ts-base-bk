@@ -16,9 +16,9 @@ install knex as global and local dependency
 
 `npm i -g knex`
 
-to run migrations run => `knex migrate:latest`
+to run migrations run => `knex migrate:latest` after going to the dist dir
 
-to drop migrations (no need in setup) run => `knex migrate:rollback`
+to drop migrations (no need in setup) run => `knex migrate:rollback` after going to the dist dir
 
 ## Run
 `npm start` for linux/mac
