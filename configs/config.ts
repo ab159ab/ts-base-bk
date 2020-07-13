@@ -1,8 +1,10 @@
+import { type } from "os";
+
 const development = {
-  host: () => "127.0.0.1",
+host: () => "127.0.0.1",
   port: () => "4321",
-  fullUrl: () => "http://api.skeleton.com",
-  allowedOrigins: () => ["http://skeleton.com", "http://testapi.skeleton.com"],
+  fullUrl: () => "http://api.bk.com",
+  allowedOrigins: () => ["http://127.0.0.1:5321"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
@@ -20,18 +22,18 @@ const development = {
 type EnvConfig = typeof development;
 const testing: EnvConfig = {
   host: () => "127.0.0.1",
-  port: () => "4322",
-  fullUrl: () => "http://testapi.skeleton.com",
-  allowedOrigins: () => ["http://skeleton.com", "http://testapi.skeleton.com"],
+  port: () => "4321",
+  fullUrl: () => "http://api.bk.com",
+  allowedOrigins: () => ["127.0.0.1:5321"],
   db: {
     client: () => "pg",
     host: () => "127.0.0.1",
     user: () => "postgres",
-    password: () => "123456",
-    database: () => "skeleton-test",
+    password: () => "qwerty098",
+    database: () => "userinfo",
   },
   fe: {
-    domain: () => "http://127.0.0.1:5321",
+    domain: () => "fe.com",
     host: () => "http://fe.com",
     port: () => "5321",
     fullUrl: () => "http://fe.com",
@@ -49,23 +51,12 @@ export const otherConfigs = {
   emailService: {
     transport: ():string => "mailgun",
     mailgun: {
-      apiKey: ():string => "f62c3af5787985c4178bb7f9ff58b6ad-87c34c41-bb176fc8",
-      domain: ():string => "sandbox010719cbb42248e4ae2ef17bca056cc9.mailgun.org",
+      apiKey: ():string => "6745a1dc44b3bd7b8e24e118d9ceae4b-46ac6b00-c784b5ab",
+      domain: ():string => "sandboxe7a44227e6f64e599fe5a80aa8262fde.mailgun.org",
       email: {
         from: ():string => "ts@test.com",
         subject: ():string => "Hi",
         replyTo: ():string => "whoever@gmail.com",
-      },
-    },
-  },
-  jest: {
-    timeoutInMs: ():number => 3000000,
-    test: {
-      auth: {
-        testFirstName: ():string => "test first name",
-        testLastName: ():string => "test last name",
-        testEmail: ():string => "test@test.com",
-        testPassword: ():string => "123456",
       },
     },
   },
