@@ -6,7 +6,6 @@
   "scripts": {
     "test:unit": "jest --watchAll --testPathPattern=src/tests/unit",
     "test:integration": "ENV=testing jest --watchAll --testPathPattern=src/tests/integration/",
-    "test-win:integration": "rmdir dist /s /q && tsc && cd dist && set ENV=testing && jest --watchAll --testPathPattern=src/tests/integration/",
     "lintAutoFix": "./node_modules/.bin/eslint src --fix; ",
     "lint": "eslint \"src/**/*.{js,ts}\" --quiet --fix",
     "build": "rm -rf dist && tsc",
@@ -15,16 +14,13 @@
     "compileForProd": "./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --presets minify ",
     "package": "npm run lint; npm run babel",
     "start": "npm run lint; npm run build; ENV=development node dist/src/app.js",
-    "startForWindows": "npm run lint && npm run build && set ENV=development node dist/src/app.js",
     "startWithoutLint": "npm run babelWithSourceMap  && node -r source-map-support dist/app.js",
-    "babelWithSourceMapForWindows": "node ./node_modules/@babel/cli/bin/babel.js src --out-dir  dist --source-maps inline ",
     "setup": "npm i source-map-support --save-dev & npx install-peerdeps --only=dev eslint-config-airbnb@18.0.1 & npm i @babel/core@7.3.4 @babel/cli@7.6.0 babel-eslint@10.0.1 @babel/preset-env@7.3.4 @babel/preset-react@7.0.0 @babel/plugin-syntax-dynamic-import@7.2.0 @babel/plugin-proposal-class-properties@7.5.5 --save-dev & npm i regenerator-runtime@0.13.3 core-js@3.6.4 --save ",
     "dbMigrateLatest": "ENV=development knex migrate:latest",
     "dbRollback": "ENV=development knex migrate:rollback",
     "dbSeed": "ENV=development knex seed:run",
     "dbReset": "npm run dbRollback; npm run dbMigrateLatest",
-    "dbResetRun": "npm run dbReset; npm run dbSeed; npm start",
-    "tsc-win": "rmdir dist /s /q && tsc && cd dist && set ENV=development && node src/app.js"
+    "dbResetRun": "npm run dbReset; npm run dbSeed; npm start"
   },
   "jest": {
     "globalSetup": "<rootDir>/dist/src/tests/global-test-setup.js"
